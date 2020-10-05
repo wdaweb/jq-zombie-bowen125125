@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link href="https://unpkg.com/nes.css/css/nes.css" rel="stylesheet" />
+  <style>
+    body{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: black;
+    }
+    #game{
+      width: 1395px;
+      height: 930px;
+      border: 1px solid black;
+      position: relative;
+      background-image: url(./image/back.gif);
+      background-size: contain;
+      background-repeat: no-repeat;
+    }
+    #startbtn{
+      position: absolute;
+    }
+    #d1{
+      position: absolute;
+      top: 30%;
+    }
+    #d2{
+      position: absolute;
+      top: 40%;
+    }
+    .monstersmall{
+      position: absolute;
+      height: 100px;
+    }
+    .monstermid{
+      position: absolute;
+      height: 200px;
+    }
+    .monsterbig{
+      position: absolute;
+      height: 300px;
+    }
+    #progressbar{
+      position: absolute;
+      width: 600px;
+      height: 30px;
+      bottom: 5%;
+    }
+    
+  </style>
+</head>
+<body>
+ <div id="game">
+  
+   
+ </div>
+  <input type="button"  id="startbtn" value="開始">
+  <div id="d1">分數:<span id="scoretext">0</span>分</div>
+  <div id="d2">剩餘:<span id="timetext">30</span>秒</div>
+  <progress class="nes-progress is-error" value="30" max="30"id="progressbar"></progress>
+ 
+ <script src="./jquery-3.5.1.min.js"></script>
+ <script>
+ let score = 0
+ let timeleft  = 30
+ let progress  = 30
+ let zbid = 0
+ let alid = 0
+ let skid = 0
+ 
+ const rand= (num)=>{
+  return Math.floor(Math.random()*num)
+ }
+//  殭屍移動
+const movezombieid = (zbid)=>{
+  $(`#zombie${zbid}`).animate({
+    left: rand(70)+"%",
+    top:  rand(70)+"%"
+  },3000,function(){
+    movezombieid(zbid)
+  })
+}
+// 外星人移動
+const movealienid = (alid)=>{
+  $(`#alien${alid}`).animate({
+    left: rand(70)+"%",
+    top:  rand(70)+"%"
+  },3000,function(){
+    movealienid(alid)
+  })
+}
+// 骷髏移動
+const moveskullid = (skid)=>{
+  $(`#skull${skid}`).animate({
+    left: rand(70)+"%",
+    top:  rand(70)+"%"
+  },3000,function(){
+    moveskullid(skid)
+  })
+}
+
+// 遊戲開始
+ $('#startbtn').click(function(){
+   $(this).attr('disabled',true)
+   //  重設
+   $('#progressbar').val(30)
+   score = 0
+   $('#scretext').text(score)
+   timeleft = 30
+   $('#timetext').text(timeleft)
+
+   let timer = setInterval(function(){
+    // 修改秒數
+    timeleft--
+    $('#timetext').text(timeleft)
+    // proress--
+    // $('#progressbar').val(progress)
+
+    if(timeleft===0){
+      clearInterval(timer)
+      $('#startbtn').attr('disabled',false)
+      $('#game img').remove()
+      setTimeout(()=>{
+        alert('時間到')
+      },50)
+    }
+    else{
+      if(rand(10)>5){
+        $('#game').append(`<img src='./image/zombie.gif' id='zombie${zbid}' class='monsterbig'>`)
+        $(`#zombie${zbid}`).css({
+          left: rand(70)+"%",
+          top:  rand(70)+"%"
+        })
+        movezombieid(zbid)
+        zbid++
+      }
+      if(rand(9)>5){
+        $('#game').append(`<img src='./image/alien.gif' id='alien${alid}' class='monstermid'>`)
+        $(`#alien${alid}`).css({
+          left: rand(70)+"%",
+          top:  rand(70)+"%"
+        })
+        movealienid(alid)
+        alid++
+    }     
+    if(rand(10)>5){
+        $('#game').append(`<img src='./image/skull.gif' id='skull${skid}' class='monstersmall'>`)
+        $(`#skull${skid}`).css({
+          left: rand(70)+"%",
+          top:  rand(70)+"%"
+        })
+        moveskullid(skid)
+        skid++
+    }     
+    }
+   },1000)
+   })
+
+   $('#game').on('click',`#zombie${zbid}`,function(){
+     $(this).attr('src',`./image/wow.gif`)
+     $(this).stop(true,false)
+     $(this).css({'pointer-events':'none','height':'150px'})
+     score++
+     $('#scoretext').text(score)
+   })
+
+   $('#game').on('click',`#alien${alid}`,function(){
+     $(this).attr('src',`./image/wow.gif`)
+     $(this).stop(true,false)
+     $(this).css({'pointer-events':'none','height':'150px'})
+     score+=2
+     $('#scoretext').text(score)
+   })
+
+   $('#game').on('click',`#skull${skid}`,function(){
+     $(this).attr('src',`./image/wow.gif`)
+     $(this).stop(true,false)
+     $(this).css({'pointer-events':'none','height':'150px'})
+     score+=5
+     $('#scoretext').text(score)
+   })
+   
+
+
+ </script>
+</body>
+</html>
