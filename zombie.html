@@ -117,11 +117,12 @@ const moveskullid = (skid)=>{
     // 修改秒數
     timeleft--
     $('#timetext').text(timeleft)
-    // proress--
-    // $('#progressbar').val(progress)
+    progress--
+    $('#progressbar').val(progress)
 
     if(timeleft===0){
       clearInterval(timer)
+      // $('#progressbar').val(30)
       $('#startbtn').attr('disabled',false)
       $('#game img').remove()
       setTimeout(()=>{
