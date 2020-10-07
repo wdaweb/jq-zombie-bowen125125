@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <link href="https://unpkg.com/nes.css/css/nes.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Freckle+Face&display=swap" rel="stylesheet">
   <style>
     body{
       display: flex;
@@ -20,6 +21,10 @@
       background-image: url(./image/back.gif);
       background-size: contain;
       background-repeat: no-repeat;
+      cursor: url(./image/cursor_black.png)50 50,auto
+    }
+    #game:active{
+      cursor: url(./image/bangeff.png)50 50,auto
     }
     #startbtn{
       position: absolute;
@@ -50,15 +55,96 @@
       height: 30px;
       bottom: 5%;
     }
+    #intro{
+      z-index: 2;
+      position: absolute;
+      width: 1395px;
+      height: 930px;
+     
+    }
+    #table{
+      width: 1395px;
+      height: 930px;
+      
+    }
+    #table td:nth-child(odd){
+     
+      background-image: url(./image/zombie.gif);
+      background-size:contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      animation: odd 3s 1s infinite;
+    }
+    #table td:nth-child(even){
+     
+      background-image: url(./image/zombie.gif);
+      background-size:contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      animation: even 3s 1s infinite;
+    }
+    @keyframes even {
+      from{
+        background-image: url(./image/zombie.gif);
+      }
+      to{
+        background-image: none;
+      }
+    }
+    @keyframes odd {
+      from{
+        background-image: none;
+      }
+      to{
+        background-image: url(./image/zombie.gif)
+      }
+    }
+    #hunt{
+      z-index: 500;
+      font-size: 100px;
+      color: rgb(211, 211, 211);
+      position: absolute;
+      font-family: 'Freckle Face', cursive;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+    }
+    #startbtn{
+      position: absolute;
+      bottom: 40%;
+      z-index: 1000     
+    }
+    
     
   </style>
 </head>
 <body>
+  <div id="intro">
+    <div id="hunt">HUNTING<br/>SEASON</div>
+    <table id="table">
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+    
+    </table>
+  </div>
  <div id="game">
-  
+
    
  </div>
-  <input type="button"  id="startbtn" value="開始">
+  <button type="button" class="nes-btn"  id="startbtn">START</button>
   <div id="d1">分數:<span id="scoretext">0</span>分</div>
   <div id="d2">剩餘:<span id="timetext">30</span>秒</div>
   <progress class="nes-progress is-error" value="30" max="30"id="progressbar"></progress>
@@ -105,7 +191,9 @@ const moveskullid = (skid)=>{
 
 // 遊戲開始
  $('#startbtn').click(function(){
-   $(this).attr('disabled',true)
+   $('#intro').css('display',"none")
+   $(this).css('display',"none")
+   $('#game').css('cursor','url(./image/cursor_black.png)')
    //  重設
    $('#progressbar').val(30)
    score = 0
@@ -122,11 +210,13 @@ const moveskullid = (skid)=>{
 
     if(timeleft===0){
       clearInterval(timer)
+      $('#intro').css('display',"auto")
+      $(this).css('display',"auto")
       // $('#progressbar').val(30)
       $('#startbtn').attr('disabled',false)
       $('#game img').remove()
       setTimeout(()=>{
-        alert('時間到')
+        alert(`時間到\n你得到的分數是${score}分`)
       },50)
     }
     else{
@@ -138,6 +228,7 @@ const moveskullid = (skid)=>{
         })
         movezombieid(zbid)
         zbid++
+        // setInterval((()=>$(`#zombie${zbid}`).attr("")),1000)
       }
       if(rand(9)>5){
         $('#game').append(`<img src='./image/alien.gif' id='alien${alid}' class='monstermid'>`)
@@ -148,11 +239,11 @@ const moveskullid = (skid)=>{
         movealienid(alid)
         alid++
     }     
-    if(rand(10)>5){
+    if(rand(7)>5){
         $('#game').append(`<img src='./image/skull.gif' id='skull${skid}' class='monstersmall'>`)
         $(`#skull${skid}`).css({
-          left: rand(70)+"%",
-          top:  rand(70)+"%"
+          left: rand(100)+"%",
+          top:  rand(100)+"%"
         })
         moveskullid(skid)
         skid++
@@ -161,28 +252,33 @@ const moveskullid = (skid)=>{
    },1000)
    })
 
-   $('#game').on('click',`#zombie${zbid}`,function(){
-     $(this).attr('src',`./image/wow.gif`)
-     $(this).stop(true,false)
-     $(this).css({'pointer-events':'none','height':'150px'})
-     score++
-     $('#scoretext').text(score)
-   })
-
-   $('#game').on('click',`#alien${alid}`,function(){
-     $(this).attr('src',`./image/wow.gif`)
-     $(this).stop(true,false)
-     $(this).css({'pointer-events':'none','height':'150px'})
-     score+=2
-     $('#scoretext').text(score)
-   })
-
-   $('#game').on('click',`#skull${skid}`,function(){
-     $(this).attr('src',`./image/wow.gif`)
-     $(this).stop(true,false)
-     $(this).css({'pointer-events':'none','height':'150px'})
-     score+=5
-     $('#scoretext').text(score)
+  
+   $('#game').on("click","img",function(){
+     if($(this).attr("src")==`./image/zombie.gif`){
+      $(this).attr('src',`./image/wow.gif`)
+      $(this).stop(true,false)
+      $(this).fadeOut(3000);
+      $(this).css({'pointer-events':'none','height':'150px'})
+      score++
+    
+     }
+     if($(this).attr("src")==`./image/alien.gif`){
+      $(this).attr('src',`./image/wow.gif`)
+      $(this).stop(true,false)
+      $(this).fadeOut(3000);
+      $(this).css({'pointer-events':'none','height':'150px'})
+      score+=2  
+    
+     }
+     if($(this).attr("src")==`./image/skull.gif`){
+      $(this).attr('src',`./image/wow.gif`)
+      $(this).stop(true,false)
+      $(this).fadeOut(3000);
+      $(this).css({'pointer-events':'none','height':'150px'})
+      score+=5  
+      
+     }
+     $("#scoretext").text(score); 
    })
    
 
