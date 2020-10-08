@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Zombie</title>
   <link href="https://unpkg.com/nes.css/css/nes.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Freckle+Face&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
   <style>
     body{
       display: flex;
@@ -29,14 +30,8 @@
     #startbtn{
       position: absolute;
     }
-    #d1{
-      position: absolute;
-      top: 30%;
-    }
-    #d2{
-      position: absolute;
-      top: 40%;
-    }
+    
+  
     .monstersmall{
       position: absolute;
       height: 100px;
@@ -54,6 +49,7 @@
       width: 600px;
       height: 30px;
       bottom: 5%;
+      z-index: 60000;
     }
     #intro{
       z-index: 2;
@@ -108,11 +104,49 @@
       top: 40%;
       left: 50%;
       transform: translate(-50%,-50%);
+      animation: bling 1s 1s infinite linear alternate
+    }
+    @keyframes bling {
+      from{
+        opacity: 1;
+      }
+      to{
+        opacity: 0.5;
+      }
     }
     #startbtn{
       position: absolute;
-      bottom: 40%;
-      z-index: 1000     
+      bottom: 35%;
+      z-index: 1000;
+      width: 100px;   
+      height: 50px;
+      font-family: 'Permanent Marker', cursive; 
+      font-size: 20px;
+    }
+    #rulebtn{
+      position: absolute;
+      bottom: 25%;
+      z-index: 1000;
+      width: 150px;   
+      height: 50px; 
+      font-family: 'Permanent Marker', cursive;
+      font-size: 25px;
+     
+    }
+    #textarea{
+      z-index: 5000;
+      position: absolute;
+      border: 1px solid black;
+      width: 100px;
+      height: 100px;
+      top: 200px;
+      left:20px;
+      color: white;
+      font-family: 'Permanent Marker', cursive;
+      font-size: 35px;
+    }
+    .d1{
+      font-size: 60px;
     }
     
     
@@ -145,8 +179,16 @@
    
  </div>
   <button type="button" class="nes-btn"  id="startbtn">START</button>
-  <div id="d1">分數:<span id="scoretext">0</span>分</div>
-  <div id="d2">剩餘:<span id="timetext">30</span>秒</div>
+  <button type="button" class="nes-btn"  id="rulebtn">READ ME!</button>
+  <div id="textarea">
+  <p class="d1">Score&ensp;:<span id="scoretext">0</span></p>
+  <p class="d1">Time&ensp;:<span id="timetext">30</span></p>
+  <br/>
+  <br/>
+  <br/>
+  <p>TOPplayer&ensp;:<span id="timetext">name</span></p>
+  <p>TOPscore&ensp;:<span id="timetext">0</span></p>
+  </div>  
   <progress class="nes-progress is-error" value="30" max="30"id="progressbar"></progress>
  
  <script src="./jquery-3.5.1.min.js"></script>
@@ -157,7 +199,14 @@
  let zbid = 0
  let alid = 0
  let skid = 0
- 
+ let dkid = 0
+
+// 規則
+$('#rulebtn').click(function(){
+  window.open(`readme.html`,`newwindow`,"height = 550,width = 890, top =250px, left =500px")
+})
+
+//  隨機參數
  const rand= (num)=>{
   return Math.floor(Math.random()*num)
  }
@@ -188,14 +237,26 @@ const moveskullid = (skid)=>{
     moveskullid(skid)
   })
 }
+// 鴨子移動
+const moveduckid = (dkid)=>{
+  $(`#duck${dkid}`).animate({
+    left: rand(70)+"%",
+    top:  rand(70)+"%"
+  },3000,function(){
+    moveduckid(dkid)
+  })
+}
+
 
 // 遊戲開始
  $('#startbtn').click(function(){
-   $('#intro').css('display',"none")
-   $(this).css('display',"none")
+   $('#intro').hide()
+   $('#rulebtn').hide()
+   $(this).hide()
    $('#game').css('cursor','url(./image/cursor_black.png)')
    //  重設
-   $('#progressbar').val(30)
+   progress = 30
+   $('#progressbar').val(progress)
    score = 0
    $('#scretext').text(score)
    timeleft = 30
@@ -210,9 +271,11 @@ const moveskullid = (skid)=>{
 
     if(timeleft===0){
       clearInterval(timer)
-      $('#intro').css('display',"auto")
-      $(this).css('display',"auto")
-      // $('#progressbar').val(30)
+      $('#rulebtn').show()
+      $('#intro').show()
+      $('#startbtn').show()
+      progress = 30
+      $('#progressbar').val(progress)
       $('#startbtn').attr('disabled',false)
       $('#game img').remove()
       setTimeout(()=>{
@@ -220,6 +283,7 @@ const moveskullid = (skid)=>{
       },50)
     }
     else{
+      // 殭屍
       if(rand(10)>5){
         $('#game').append(`<img src='./image/zombie.gif' id='zombie${zbid}' class='monsterbig'>`)
         $(`#zombie${zbid}`).css({
@@ -230,6 +294,7 @@ const moveskullid = (skid)=>{
         zbid++
         // setInterval((()=>$(`#zombie${zbid}`).attr("")),1000)
       }
+      // 外星人
       if(rand(9)>5){
         $('#game').append(`<img src='./image/alien.gif' id='alien${alid}' class='monstermid'>`)
         $(`#alien${alid}`).css({
@@ -239,20 +304,31 @@ const moveskullid = (skid)=>{
         movealienid(alid)
         alid++
     }     
-    if(rand(7)>5){
-        $('#game').append(`<img src='./image/skull.gif' id='skull${skid}' class='monstersmall'>`)
-        $(`#skull${skid}`).css({
-          left: rand(100)+"%",
-          top:  rand(100)+"%"
-        })
-        moveskullid(skid)
-        skid++
-    }     
+      // 骷髏
+      if(rand(7)>5){
+          $('#game').append(`<img src='./image/skull.gif' id='skull${skid}' class='monstersmall'>`)
+          $(`#skull${skid}`).css({
+            left: rand(100)+"%",
+            top:  rand(100)+"%"
+          })
+          moveskullid(skid)
+          skid++
+      }
+      // 鴨子
+      if(rand(8)>5){
+          $('#game').append(`<img src='./image/duck.gif' id='duck${dkid}' class='monstermid'>`)
+          $(`#duck${dkid}`).css({
+            left: rand(100)+"%",
+            top:  rand(100)+"%"
+          })
+          moveduckid(dkid)
+          dkid++
+      }  
     }
    },1000)
    })
 
-  
+  // 得分
    $('#game').on("click","img",function(){
      if($(this).attr("src")==`./image/zombie.gif`){
       $(this).attr('src',`./image/wow.gif`)
@@ -267,15 +343,21 @@ const moveskullid = (skid)=>{
       $(this).stop(true,false)
       $(this).fadeOut(3000);
       $(this).css({'pointer-events':'none','height':'150px'})
-      score+=2  
-    
+      score+=2     
      }
      if($(this).attr("src")==`./image/skull.gif`){
       $(this).attr('src',`./image/wow.gif`)
       $(this).stop(true,false)
       $(this).fadeOut(3000);
       $(this).css({'pointer-events':'none','height':'150px'})
-      score+=5  
+      score+=5       
+     }
+     if($(this).attr("src")==`./image/duck.gif`){
+      $(this).attr('src',`./image/sad.png`)
+      $(this).stop(true,false)
+      $(this).fadeOut(3000);
+      $(this).css({'pointer-events':'none','height':'150px'})
+      score-=2  
       
      }
      $("#scoretext").text(score); 
