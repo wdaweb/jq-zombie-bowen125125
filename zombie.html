@@ -186,8 +186,8 @@
   <br/>
   <br/>
   <br/>
-  <p>TOPplayer&ensp;:<span id="timetext">name</span></p>
-  <p>TOPscore&ensp;:<span id="timetext">0</span></p>
+  <p>TOPplayer&ensp;:<span id="topname">name</span></p>
+  <p>TOPscore&ensp;:<span id="topscore">0</span></p>
   </div>  
   <progress class="nes-progress is-error" value="30" max="30"id="progressbar"></progress>
  
@@ -200,6 +200,16 @@
  let alid = 0
  let skid = 0
  let dkid = 0
+//  儲存紀錄
+const topname = document.getElementById("topname")
+const topscore= document.getElementById("topscore")
+    let highscore = { name: '', score: 0 }
+    let highscoreStorage = JSON.parse(localStorage.getItem('highscore'))
+    if(highscoreStorage !== null) {
+      highscore = highscoreStorage
+      topname.innerText = highscore.name
+      topscore.innerText = highscore.score
+    }
 
 // 規則
 $('#rulebtn').click(function(){
@@ -281,6 +291,21 @@ const moveduckid = (dkid)=>{
       setTimeout(()=>{
         alert(`時間到\n你得到的分數是${score}分`)
       },50)
+      // 是否為最高分
+      if(highscoreStorage === null || highscore.score < score) {
+      //   音效
+      setTimeout(()=>{
+        const name = prompt('Top Score! Please tell me your name')
+      },50)
+       
+        highscore.score = score
+
+        highscore.name = name || 'Player'
+  
+        localStorage.setItem('highscore', JSON.stringify(highscore))
+        topname.innerText = highscore.name
+        topscore.innerText = highscore.score
+      }
     }
     else{
       // 殭屍
