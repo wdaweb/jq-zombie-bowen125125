@@ -69,7 +69,7 @@
       background-size:contain;
       background-position: center;
       background-repeat: no-repeat;
-      animation: odd 3s 1s infinite;
+      animation: odd 0.9s 0s infinite linear;
     }
     #table td:nth-child(even){
      
@@ -77,7 +77,7 @@
       background-size:contain;
       background-position: center;
       background-repeat: no-repeat;
-      animation: even 3s 1s infinite;
+      animation: odd 0.9s 0.45s infinite linear;
     }
     @keyframes even {
       from{
@@ -153,6 +153,7 @@
   </style>
 </head>
 <body>
+  <audio src="./sound/spooky.mp3" autoplay="true" playcount="-1"></audio>
   <div id="intro">
     <div id="hunt">HUNTING<br/>SEASON</div>
     <table id="table">
@@ -200,6 +201,10 @@
  let alid = 0
  let skid = 0
  let dkid = 0
+ let wow = new Audio()
+ wow.src='./sound/wow.mp3'
+ let nope = new Audio()
+ nope.src = './sound/nope.mp3'
 //  儲存紀錄
 const topname = document.getElementById("topname")
 const topscore= document.getElementById("topscore")
@@ -355,7 +360,10 @@ const moveduckid = (dkid)=>{
 
   // 得分
    $('#game').on("click","img",function(){
+    //  殭屍一分
      if($(this).attr("src")==`./image/zombie.gif`){
+     
+      wow.cloneNode().play()
       $(this).attr('src',`./image/wow.gif`)
       $(this).stop(true,false)
       $(this).fadeOut(3000);
@@ -363,21 +371,29 @@ const moveduckid = (dkid)=>{
       score++
     
      }
+    // 外星人二分
      if($(this).attr("src")==`./image/alien.gif`){
+      
+      wow.cloneNode().play()
       $(this).attr('src',`./image/wow.gif`)
       $(this).stop(true,false)
       $(this).fadeOut(3000);
       $(this).css({'pointer-events':'none','height':'150px'})
       score+=2     
      }
+    //  骷髏五分
      if($(this).attr("src")==`./image/skull.gif`){
+      
+      wow.cloneNode().play()
       $(this).attr('src',`./image/wow.gif`)
       $(this).stop(true,false)
       $(this).fadeOut(3000);
       $(this).css({'pointer-events':'none','height':'150px'})
       score+=5       
      }
+    //  鴨子扣兩分
      if($(this).attr("src")==`./image/duck.gif`){
+      nope.cloneNode().play()
       $(this).attr('src',`./image/sad.png`)
       $(this).stop(true,false)
       $(this).fadeOut(3000);

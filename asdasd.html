@@ -1,0 +1,33 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- 第一个meta指定编码,IDEA新建默认就有的，与Bootstarp无关-->
+    <meta charset="UTF-8">
+    <!-- BootCDN提供了很多如JQuery、Chart.js、ECarts.js等等，只需去复制来即可
+    BootCDN官网地址：http://www.bootcdn.cn/-->
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript">
+    let wow = new Audio()
+    wow.src='./sound/wow.mp3'
+        $(function () {
+            /** 音效*/
+            $("#hintButton").click(function () {
+                wow.play()
+            });
+        });
+        /**
+         * 产生音效
+         * @param audioSrc ：音频路径
+         */
+        function showSound(audioSrc) {
+            $("#hint").remove();/**因为音效元素是追加的，所以每次生成之前，将原来的删除掉*/
+            var audioJQ = $("<audio src='" + audioSrc + "' autoplay id='hint'/>");
+            audioJQ.appendTo("body");/**创建 audio 标签的 Jquery 对象，然后追加到 body 进行播放*/
+        }
+    </script>
+</head>
+<body>
+<button id="hintButton">提示音</button>
+</body>
+</html>
