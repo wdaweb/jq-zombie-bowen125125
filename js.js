@@ -7,7 +7,7 @@ let score = 0
  let dkid = 0
  let bgmusic = document.getElementById('bgmusic')
  let wow = new Audio()
- wow.src='./sound/wow.mp3'
+ wow.src='./sound/yeah.mp3'
  let bow = new Audio()
  bow.src = './sound/bow.mp3'
  let thriller = new Audio()
@@ -146,7 +146,7 @@ const moveduckid = (dkid)=>{
     }     
       // 骷髏
       if(rand(7)>5){
-          $('#game').append(`<img src='./image/skull.gif' id='skull${skid}' class='monstersmall'>`)
+          $('#game').append(`<img src='./image/skeleton.gif' id='skull${skid}' class='monstersmall'>`)
           $(`#skull${skid}`).css({
             left: rand(100)+"%",
             top:  rand(100)+"%"
@@ -174,7 +174,7 @@ const moveduckid = (dkid)=>{
      if($(this).attr("src")==`./image/zombie.gif`){
      
       wow.cloneNode().play()
-      $(this).attr('src',`./image/wow.gif`)
+      $(this).attr('src',`./image/nice.png`)
       $(this).stop(true,false)
       $(this).fadeOut(3000);
       $(this).css({'pointer-events':'none','height':'150px'})
@@ -185,17 +185,17 @@ const moveduckid = (dkid)=>{
      if($(this).attr("src")==`./image/alien.gif`){
       
       wow.cloneNode().play()
-      $(this).attr('src',`./image/wow.gif`)
+      $(this).attr('src',`./image/nice.png`)
       $(this).stop(true,false)
       $(this).fadeOut(3000);
       $(this).css({'pointer-events':'none','height':'150px'})
       score+=2     
      }
     //  骷髏五分
-     if($(this).attr("src")==`./image/skull.gif`){
+     if($(this).attr("src")==`./image/skeleton.gif`){
       
       wow.cloneNode().play()
-      $(this).attr('src',`./image/wow.gif`)
+      $(this).attr('src',`./image/nice.png`)
       $(this).stop(true,false)
       $(this).fadeOut(3000);
       $(this).css({'pointer-events':'none','height':'150px'})
