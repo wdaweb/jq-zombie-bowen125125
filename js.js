@@ -12,6 +12,10 @@ let score = 0
  bow.src = './sound/bow.mp3'
  let thriller = new Audio()
  thriller.src = './sound/thriller.mp3'
+ let spooky = new Audio()
+ spooky.src= './sound/spooky.mp3'
+ let oh = new Audio()
+ oh.src= './sound/oh.mp3'
 //  儲存紀錄
 const topname = document.getElementById("topname")
 const topscore= document.getElementById("topscore")
@@ -72,7 +76,8 @@ const moveduckid = (dkid)=>{
 
 // 遊戲開始
  $('#startbtn').click(function(){
-   
+   spooky.pause()
+   spooky.load()
    bgmusic.pause()
    thriller.play()
    $('#intro').hide()
@@ -83,7 +88,7 @@ const moveduckid = (dkid)=>{
    progress = 30
    $('#progressbar').val(progress)
    score = 0
-   $('#scretext').text(score)
+   $('#scoretext').text(score)
    timeleft = 30
    $('#timetext').text(timeleft)
 
@@ -97,6 +102,7 @@ const moveduckid = (dkid)=>{
     if(timeleft===0){
       clearInterval(timer)
       thriller.pause()
+      thriller.load()
       $('#rulebtn').show()
       $('#intro').show()
       $('#startbtn').show()
@@ -111,16 +117,20 @@ const moveduckid = (dkid)=>{
       if(highscoreStorage === null || highscore.score < score) {
       
       setTimeout(()=>{
-        const name = prompt('Top Score! Please tell me your name')
-        highscore.score = score
+        oh.play()
+        setTimeout(()=>{
+          const name = prompt('Top Score! Please tell me your name')
+          highscore.score = score
 
-        highscore.name = name || 'Player'
-  
-        localStorage.setItem('highscore', JSON.stringify(highscore))
-        topname.innerText = highscore.name
-        topscore.innerText = highscore.score
+          highscore.name = name || 'Player'
+    
+          localStorage.setItem('highscore', JSON.stringify(highscore))
+          topname.innerText = highscore.name
+          topscore.innerText = highscore.score
+        },50)       
       },1000)             
       }
+      spooky.play()
     }
     else{
       // 殭屍
@@ -132,7 +142,7 @@ const moveduckid = (dkid)=>{
         })
         movezombieid(zbid)
         zbid++
-        // setInterval((()=>$(`#zombie${zbid}`).attr("")),1000)
+       
       }
       // 外星人
       if(rand(9)>5){
